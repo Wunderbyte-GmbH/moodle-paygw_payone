@@ -39,6 +39,9 @@ $string['bc5406'] = "EPS";
 $string['bc5408'] = "Bank transfer by Worldline";
 $string['bc809'] = "iDEAL";
 $string['bc840'] = "Paypal";
+
+$string['amountmismatch'] = 'Der Betrag, den Sie zu zahlen versuchen, entspricht nicht dem gespeicherten Betrag. Ihr Konto wurde nicht belastet.';
+$string['authorising'] = 'Authorisiere die Zahlung. Bitte warten...';
 $string['brandname'] = 'Markenname';
 $string['brandname_help'] = 'Ein optionaler Name der den Namen Payiunity auf der Zahlungsseite ersetzt.';
 $string['cannotfetchorderdetails'] = 'Konnte keine Zahlungsdetails von payone erhalten. Ihr Konto wurde nicht belastet.';
