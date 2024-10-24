@@ -154,10 +154,13 @@ class get_config_for_js extends external_api {
             }
             );
             $merchanttransactionid = $itemid . ' ' .  $USER->id;
-
             foreach ($cartitemsonlyoptions as $item) {
-                $explode = explode(' - ', $item->itemid);
-                $course = $explode[0];
+                $explode = explode(' - ', $item->itemname);
+                if (count($explode) > 1) {
+                    $course = $explode[0];
+                } else {
+                    $course = $item->itemid;
+                }
 
                 $substring = ' K' . $course . ' ' . $item->price;
                 $merchanttransactionid .= $substring;
