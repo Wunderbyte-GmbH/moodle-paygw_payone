@@ -62,7 +62,7 @@ class check_status extends \core\task\adhoc_task {
 
         $taskdata = $this->get_custom_data();
 
-        $userid = $taskdata->userid;
+        $userid = $taskdata->userid ?? 0;
 
         if (empty($userid)) {
             $userid = $this->get_userid();
@@ -77,7 +77,7 @@ class check_status extends \core\task\adhoc_task {
                 $taskdata->token,
                 $taskdata->customer,
                 $taskdata->ischeckstatus,
-                $taskdata->resourcepath,
+                $taskdata->resourcepath ?? '',
                 $userid,
             );
         } catch (\Exception $e) {
