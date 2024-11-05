@@ -134,6 +134,7 @@ class payone_sdk {
 
         $refs = new PaymentReferences();
         $refs->setMerchantReference($data->tid);
+        $refs->setMerchantParameters($data->merchantParameters);
 
         $amountofmoney = new AmountOfMoney();
         $amountofmoney->setAmount($data->amount * 100);
@@ -156,7 +157,6 @@ class payone_sdk {
         $client->merchant($this->brandname)->hostedCheckout()->createHostedCheckout($createhostedcheckoutrequest);
 
         return $createhostedcheckoutresponse;
-
     }
 
     /**

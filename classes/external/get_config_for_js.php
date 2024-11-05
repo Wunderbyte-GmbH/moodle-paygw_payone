@@ -171,7 +171,7 @@ class get_config_for_js extends external_api {
 
             }
             $pricestring = ' ' . $amount;
-            $merchanttransactionid .= $pricestring . ' ' . $timestamp;
+            $merchanttransactionid .= $pricestring;
             $longmtid = $merchanttransactionid;
             // Payment provider accepts max string length of 40 characters.
             if (strlen($merchanttransactionid) >= 39) {
@@ -189,6 +189,7 @@ class get_config_for_js extends external_api {
 
         $paymentdata = new \stdClass();
         $paymentdata->tid = $merchanttransactionid;
+        $paymentdata->merchantParameters = $longmtid;
         $paymentdata->amount = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
         $paymentdata->currency = $payable->get_currency();
         $paymentdata->redirecturl = $root . "/payment/gateway/payone/checkout.php?itemid=" . $itemid . "&component=" .
