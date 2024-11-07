@@ -30,6 +30,7 @@ use OnlinePayments\Sdk\Communicator;
 use OnlinePayments\Sdk\CommunicatorConfiguration;
 use OnlinePayments\Sdk\DefaultConnection;
 use OnlinePayments\Sdk\Domain\AmountOfMoney;
+use OnlinePayments\Sdk\Domain\CardPaymentMethodSpecificInput;
 use OnlinePayments\Sdk\Domain\CreateHostedCheckoutRequest;
 use OnlinePayments\Sdk\Domain\CreateHostedCheckoutResponse;
 use OnlinePayments\Sdk\Domain\GetHostedCheckoutResponse;
@@ -146,10 +147,14 @@ class payone_sdk {
 
         $hostedcheckoutspecificinput = new HostedCheckoutSpecificInput();
 
+        $cardspecifcheckoutinput = new CardPaymentMethodSpecificInput();
+        $cardspecifcheckoutinput->setAuthorizationMode('SALE');
+
         $hostedcheckoutspecificinput->setReturnUrl($data->redirecturl);
 
         $createhostedcheckoutrequest->setOrder($order);
         $createhostedcheckoutrequest->setHostedCheckoutSpecificInput($hostedcheckoutspecificinput);
+        $createhostedcheckoutrequest->setCardPaymentMethodSpecificInput($cardspecifcheckoutinput);
 
         $client = $this->return_client_sdk();
 
