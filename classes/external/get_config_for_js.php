@@ -166,20 +166,13 @@ class get_config_for_js extends external_api {
                     $course = $item->itemid;
                 }
 
-                $substring = ' K' . $course . ' ' . $item->price;
+                $substring = ' K' . $course;
                 $merchanttransactionid .= $substring;
 
             }
-            $pricestring = ' ' . $amount;
-            $merchanttransactionid .= $pricestring;
             $longmtid = $merchanttransactionid;
             // Payment provider accepts max string length of 40 characters.
-            if (strlen($merchanttransactionid) >= 39) {
-                $merchanttransactionid = $itemid . ' ' .  $USER->id . ' ' . $amount . ' ' . $timestamp;
-            }
-            if (strlen($merchanttransactionid) >= 39) {
-                $merchanttransactionid = $string . $timestamp;
-            }
+            $merchanttransactionid = substr($string, 0, 40);
         } else {
             $merchanttransactionid = $string . $timestamp;
             $longmtid = $merchanttransactionid;
