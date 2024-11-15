@@ -57,7 +57,6 @@ if (!interface_exists(interface_transaction_complete::class)) {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class transaction_complete extends external_api implements interface_transaction_complete {
-
     /**
      * Returns description of method parameters.
      *
@@ -92,8 +91,17 @@ class transaction_complete extends external_api implements interface_transaction
      * @param int $userid
      * @return array
      */
-    public static function execute(string $component, string $paymentarea, int $itemid, string $tid, string $token = '0',
-     string $customer = '0', bool $ischeckstatus = false, string $resourcepath = '', int $userid = 0): array {
+    public static function execute(
+        string $component,
+        string $paymentarea,
+        int $itemid,
+        string $tid,
+        string $token = '0',
+        string $customer = '0',
+        bool $ischeckstatus = false,
+        string $resourcepath = '',
+        int $userid = 0
+    ): array {
         global $USER, $DB, $CFG;
 
         $success = false;
@@ -126,10 +134,15 @@ class transaction_complete extends external_api implements interface_transaction
         }
 
         // We need to prevent duplicates, so check if the payment already exists!
-        if ($DB->get_records('payments', [
-            'component' => 'local_shopping_cart',
-            'itemid' => $itemid,
-        ])) {
+        if (
+            $DB->get_records(
+                'payments',
+                [
+                    'component' => 'local_shopping_cart',
+                    'itemid' => $itemid,
+                ]
+            )
+        ) {
             return [
                 'url' => $successurl ?? $serverurl,
                 'success' => true,
@@ -165,7 +178,7 @@ class transaction_complete extends external_api implements interface_transaction
         $surcharge = helper::get_gateway_surcharge('payone');
         $amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
-        $sdk = new payone_sdk($config->clientid, $config->secret, $config->brandname, $sandbox );
+        $sdk = new payone_sdk($config->clientid, $config->secret, $config->brandname, $sandbox);
         $orderdetails = $sdk->check_status($tid);
         $statusorder = $orderdetails->getStatus();
         if ($orderdetails && $statusorder == 'PAYMENT_CREATED') {
@@ -221,9 +234,16 @@ class transaction_complete extends external_api implements interface_transaction
                     $success = true;
 
                     try {
-                        $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
-                            $itemid, (int) $userid, $amount, $currency, 'payone');
-
+                        $paymentid = payment_helper::save_payment(
+                            $payable->get_account_id(),
+                            $component,
+                            $paymentarea,
+                            $itemid,
+                            (int) $userid,
+                            $amount,
+                            $currency,
+                            'payone'
+                        );
                         // Store payone extra information.
                         $record = new \stdClass();
                         $record->paymentid = $paymentid;
@@ -232,7 +252,7 @@ class transaction_complete extends external_api implements interface_transaction
                         $paymentoutput = $orderdetails->getCreatedPaymentOutput()->getPayment()->getPaymentOutput();
 
                         if ($redirectedmethod = $paymentoutput->getRedirectPaymentMethodSpecificOutput()) {
-                                $brandcode = $redirectedmethod->getPaymentProductId();
+                            $brandcode = $redirectedmethod->getPaymentProductId();
                         } else if ($cardpaymentmethod = $paymentoutput->getCardPaymentMethodSpecificOutput()) {
                             $brandcode = $cardpaymentmethod->getPaymentProductId();
                         } else {
@@ -252,8 +272,12 @@ class transaction_complete extends external_api implements interface_transaction
                         $DB->insert_record('paygw_payone', $record);
 
                         // Set status in open_orders to complete.
-                        if ($existingrecord = $DB->get_record('paygw_payone_openorders',
-                        ['tid' => $tid])) {
+                        if (
+                            $existingrecord = $DB->get_record(
+                                'paygw_payone_openorders',
+                                ['tid' => $tid]
+                            )
+                        ) {
                             $existingrecord->status = 3;
                             $DB->update_record('paygw_payone_openorders', $existingrecord);
 
@@ -281,8 +305,15 @@ class transaction_complete extends external_api implements interface_transaction
                         $event->trigger();
 
                         // If the delivery was not successful, we trigger an event.
-                        if (!payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, (int) $userid)) {
-
+                        if (
+                            !payment_helper::deliver_order(
+                                $component,
+                                $paymentarea,
+                                $itemid,
+                                $paymentid,
+                                (int) $userid
+                            )
+                        ) {
                             $context = context_system::instance();
                             $event = delivery_error::create([
                                 'context' => $context,
@@ -306,7 +337,6 @@ class transaction_complete extends external_api implements interface_transaction
                     . " resultcode: " . $orderdetails->getCreatedPaymentOutput()
                         ->getPayment()->getStatusOutput()->getStatusCode() ?? ' noresultcode';
                 }
-
             } else {
                 $success = false;
                 // Get the payment output only once to avoid multiple calls.
@@ -315,9 +345,7 @@ class transaction_complete extends external_api implements interface_transaction
                 $statuscode = $payment ? $payment->getStatusOutput()->getStatusCode() : 'noresultcode';
 
                 $message = get_string('paymentnotcleared', 'paygw_payone') . " resultcode: " . $statuscode;
-
             }
-
         } else {
             // Could not capture authorization!
             $success = false;
@@ -327,10 +355,13 @@ class transaction_complete extends external_api implements interface_transaction
 
         // If there is no success, we trigger this event.
         if (!$success) {
-
             if ($setfailed) {
-                if ($existingrecord = $DB->get_record('paygw_payone_openorders',
-                ['tid' => $tid])) {
+                if (
+                    $existingrecord = $DB->get_record(
+                        'paygw_payone_openorders',
+                        ['tid' => $tid]
+                    )
+                ) {
                     $existingrecord->status = 2;
                     $DB->update_record('paygw_payone_openorders', $existingrecord);
                 }
