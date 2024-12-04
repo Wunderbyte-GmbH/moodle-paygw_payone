@@ -201,7 +201,8 @@ class get_config_for_js extends external_api {
             $record->status = 0;
             $record->timecreated = time();
             $record->timemodified = time();
-            $record->merchantref = $longmtid;
+            $record->merchantref = $purchaseid;
+            $record->customorderid = $longmtid;
 
             // Check for duplicate.
             if (!$existingrecord = $DB->get_record('paygw_payone_openorders', ['itemid' => $itemid, 'userid' => $USER->id])) {

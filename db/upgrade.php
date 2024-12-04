@@ -139,5 +139,20 @@ function xmldb_paygw_payone_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2024052301, 'paygw', 'payone');
     }
 
+    if ($oldversion < 2024120400) {
+
+        // Define field customorderid to be added to paygw_payone_openorders.
+        $table = new xmldb_table('paygw_payone_openorders');
+        $field = new xmldb_field('customorderid', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'merchantref');
+
+        // Conditionally launch add field customorderid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Payone savepoint reached.
+        upgrade_plugin_savepoint(true, 2024120400, 'paygw', 'payone');
+    }
+
     return true;
 }
