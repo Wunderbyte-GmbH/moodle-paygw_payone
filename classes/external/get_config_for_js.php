@@ -145,9 +145,11 @@ class get_config_for_js extends external_api {
         $environment = $config['environment'];
         $sandbox = $environment == 'sandbox' ? true : false;
 
-        $string = bin2hex(openssl_random_pseudo_bytes(8));
+        // $string = bin2hex(openssl_random_pseudo_bytes(8));
         $now = new DateTime();
         $timestamp = $now->getTimestamp();
+
+        $merchanttransactionid = $itemid;
 
         if ( $component == 'local_shopping_cart' && class_exists('mod_booking\booking')) {
             $cartitems = shopping_cart_history::return_data_via_identifier($itemid, intval($USER->id));
@@ -157,7 +159,7 @@ class get_config_for_js extends external_api {
                 return $item->area == 'option';
             }
             );
-            $merchanttransactionid = $itemid . ' ' .  $USER->id;
+            $longmtid = $itemid . ' ' .  $USER->id;
             foreach ($cartitemsonlyoptions as $item) {
                 $explode = explode(' - ', $item->itemname);
                 if (count($explode) > 1) {
@@ -167,14 +169,12 @@ class get_config_for_js extends external_api {
                 }
 
                 $substring = ' K' . $course;
-                $merchanttransactionid .= $substring;
+                $longmtid .= $substring;
 
             }
-            $longmtid = $merchanttransactionid;
             // Payment provider accepts max string length of 40 characters.
-            $merchanttransactionid = substr($string, 0, 40);
+
         } else {
-            $merchanttransactionid = $string . $timestamp;
             $longmtid = $merchanttransactionid;
         }
 
