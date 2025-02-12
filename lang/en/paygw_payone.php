@@ -55,6 +55,7 @@ $string['internalerror'] = 'An internal error has occurred. Please contact us.';
 $string['live'] = 'Live';
 $string['loading'] = 'Loading...';
 $string['more'] = "More";
+$string['nonmatchingtidandidentifier'] = 'Tid and identifier don\'t match';
 $string['other_options'] = "Other payment options";
 $string['paycredit'] = "Pay with creditcard";
 $string['payment_added'] = 'Payment transaction was started. (Open order was added.)';

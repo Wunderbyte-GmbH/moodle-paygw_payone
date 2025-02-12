@@ -55,6 +55,7 @@ $string['internalerror'] = 'Ein interner Fehler ist aufgetreten. Bitte kontaktie
 $string['live'] = 'Live';
 $string['loading'] = 'Laden...';
 $string['more'] = "Mehr";
+$string['nonmatchingtidandidentifier'] = 'Tid und identifier stimmen nicht überein';
 $string['other_options'] = "Andere Zahlungsarten";
 $string['paycredit'] = "Mit Kreditkarte zahlen";
 $string['payment_added'] = 'Zahlungstransaktion wurde gestartet. (Offener Auftrag wurde angelegt.)';

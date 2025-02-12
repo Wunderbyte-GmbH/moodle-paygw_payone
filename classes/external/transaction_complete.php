@@ -110,11 +110,22 @@ class transaction_complete extends external_api implements interface_transaction
         $successurl = helper::get_success_url($component, $paymentarea, $itemid)->__toString();
         $serverurl = $CFG->wwwroot;
 
+        // It's a major security issue here is to check if tid, itemid and userid are correct.
+        $openordersrecord = $DB->get_record('paygw_payone_openorders', ['itemid' => $itemid, 'tid' => $tid]);
+
+        if (!$openordersrecord) {
+            return [
+                'url' => $successurl ?? $serverurl,
+                'success' => true,
+                'message' => get_string('nonmatchingtidandidentifier', 'paygw_payone'),
+            ];
+        }
+
         if (empty($userid)) {
             $userid = $USER->id;
             // Fallback: If it's the system user 0, we need to get the REAL user from openorders table!
             if (empty($userid)) {
-                if (!$userid = $DB->get_field('paygw_payone_openorders', 'userid', ['itemid' => $itemid])) {
+                if (!$userid = $openordersrecord->userid) {
                     // We need a hard stop. If for any reason we can't find out the userid, we log it and stop.
                     // We trigger the payment_error event.
                     $context = context_system::instance();
@@ -167,6 +178,8 @@ class transaction_complete extends external_api implements interface_transaction
             'resourcepath' => $resourcepath,
             'userid' => $userid,
         ]);
+
+        // Test if itemid, userid and tid correspond to data in open orders table.
 
         $config = (object)helper::get_gateway_configuration($component, $paymentarea, $itemid, 'payone');
         $sandbox = $config->environment == 'sandbox';
