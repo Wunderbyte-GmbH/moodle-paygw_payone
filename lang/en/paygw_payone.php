@@ -75,3 +75,4 @@ $string['secret'] = 'Secret';
 $string['secret_help'] = 'The secret that payone generated for your application.';
 $string['success'] = 'Success';
 $string['unknownbrand'] = "UK";
+$string['wronguseridintransactioncomplete'] = 'Checkout was tried with wrong user';

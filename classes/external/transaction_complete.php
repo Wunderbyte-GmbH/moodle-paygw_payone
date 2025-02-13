@@ -131,25 +131,30 @@ class transaction_complete extends external_api implements interface_transaction
 
         if (empty($userid)) {
             $userid = $USER->id;
-            // Fallback: If it's the system user 0, we need to get the REAL user from openorders table!
-            if (empty($userid)) {
-                if (!$userid = $openordersrecord->userid) {
-                    // We need a hard stop. If for any reason we can't find out the userid, we log it and stop.
-                    // We trigger the payment_error event.
-                    $context = context_system::instance();
-                    $event = payment_error::create([
-                        'context' => $context,
-                        'userid' => $userid,
-                        'other' => [
-                                'message' => 'nouseridintransactioncomplete',
-                                'orderid' => $tid,
-                                'itemid' => $itemid,
-                                'component' => $component,
-                                'paymentarea' => $paymentarea]]);
-                    $event->trigger();
-                    throw new \moodle_exception('nouseridintransactioncomplete', 'paygw_payone');
-                }
-            }
+        }
+        if ($userid != $openordersrecord->userid) {
+            $userid = $USER->id;
+             // We need a hard stop. If for any reason we can't find out the userid, we log it and stop.
+            // We trigger the payment_error event.
+            $context = context_system::instance();
+            $event = payment_error::create([
+                'context' => $context,
+                'userid' => $userid,
+                'other' => [
+                        'message' => 'wronguseridintransactioncomplete',
+                        'orderid' => $tid,
+                        'itemid' => $itemid,
+                        'component' => $component,
+                        'paymentarea' => $paymentarea]]);
+            $event->trigger();
+
+            $url = str_replace('success=1', 'success=0', $successurl);
+
+            return [
+                'url' => $successurl ?? $serverurl,
+                'success' => false,
+                'message' => get_string('wronguseridintransactioncomplete', 'paygw_payone'),
+            ];
         }
 
         // We need to prevent duplicates, so check if the payment already exists!

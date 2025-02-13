@@ -75,3 +75,4 @@ $string['secret'] = 'Access Token';
 $string['secret_help'] = 'Der access Token den payone für diese Anwendung bereitstellt.';
 $string['success'] = 'Erfolg';
 $string['unknownbrand'] = "UK";
+$string['wronguseridintransactioncomplete'] = 'Checkout mit falschem Nutzer durchgeführt';
