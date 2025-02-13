@@ -220,6 +220,18 @@ class get_config_for_js extends external_api {
                 ]);
                 $event->trigger();
             } else {
+                // There is one case where price could have changed (because of changes in credit application eg.
+                if ($amount != $existingrecord->price) {
+                    // We need to update the open Orders table accordingly.
+                    $DB->update_record(
+                        'paygw_payone_openorders',
+                        [
+                            'id' => $existingrecord->id,
+                            'price' => $amount,
+                            'timemodified' => time(),
+                        ]
+                    );
+                }
                 // If we already have an entry with the exact same itemid and userid, we actually will use the same merchant id.
                 // This will prevent a successful payment and we thus avoid duplicate entries in DB.
                 $merchanttransactionid = $existingrecord->tid;

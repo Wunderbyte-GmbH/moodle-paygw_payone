@@ -114,11 +114,19 @@ class transaction_complete extends external_api implements interface_transaction
         $openordersrecord = $DB->get_record('paygw_payone_openorders', ['itemid' => $itemid, 'tid' => $tid]);
 
         if (!$openordersrecord) {
-            return [
-                'url' => $successurl ?? $serverurl,
-                'success' => true,
-                'message' => get_string('nonmatchingtidandidentifier', 'paygw_payone'),
-            ];
+            // There is a paymenterror.
+            $context = context_system::instance();
+            $event = payment_error::create([
+                'context' => $context,
+                'userid' => $userid,
+                'other' => [
+                        'message' => 'nonmatchingtidandidentifier',
+                        'orderid' => $tid,
+                        'itemid' => $itemid,
+                        'component' => $component,
+                        'paymentarea' => $paymentarea]]);
+            $event->trigger();
+            throw new \moodle_exception('nonmatchingtidandidentifier', 'paygw_payone');
         }
 
         if (empty($userid)) {
@@ -190,6 +198,8 @@ class transaction_complete extends external_api implements interface_transaction
         // Add surcharge if there is any.
         $surcharge = helper::get_gateway_surcharge('payone');
         $amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
+
+        // Now we check of the amount from the open orders table is the same that the user actually paid.
 
         $sdk = new payone_sdk($config->clientid, $config->secret, $config->brandname, $sandbox);
         $orderdetails = $sdk->check_status($tid);
