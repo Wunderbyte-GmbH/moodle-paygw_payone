@@ -84,6 +84,26 @@ class payone_sdk {
     private $sandbox;
 
     /**
+     * @var callable factory
+     */
+    public static $factory = null;
+
+    /**
+     * helper constructor.
+     *
+     * @param string $clientid The client id.
+     * @param string $secret payone secret.
+     * @param string $brandname payone brandname.
+     * @param bool $sandbox Whether we are working with the sandbox environment or not.
+     */
+    public static function create($clientid, $secret, $brandname, $sandbox) {
+        if (self::$factory) {
+            return call_user_func(self::$factory, $clientid, $secret, $brandname, $sandbox);
+        }
+        return new self($clientid, $secret, $brandname, $sandbox);
+    }
+
+    /**
      * helper constructor.
      *
      * @param string $clientid The client id.

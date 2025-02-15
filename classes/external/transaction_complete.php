@@ -206,7 +206,7 @@ class transaction_complete extends external_api implements interface_transaction
 
         // Now we check of the amount from the open orders table is the same that the user actually paid.
 
-        $sdk = new payone_sdk($config->clientid, $config->secret, $config->brandname, $sandbox);
+        $sdk = payone_sdk::create($config->clientid, $config->secret, $config->brandname, $sandbox);
         $orderdetails = $sdk->check_status($tid);
         $statusorder = $orderdetails->getStatus();
         if ($orderdetails && $statusorder == 'PAYMENT_CREATED') {
