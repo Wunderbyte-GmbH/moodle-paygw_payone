@@ -124,6 +124,7 @@ final class transaction_complete_test extends \advanced_testcase {
         $paymentresponse = $this->createMock(PaymentResponse::class);
         $paymentresponse->method('getPaymentOutput')->willReturn($paymentoutput);
         $paymentresponse->method('getStatusOutput')->willReturn($statusoutput);
+        $paymentresponse->method('getStatus')->willReturn('CAPTURED');
 
         $createdpaymentoutput = $this->createMock(CreatedPaymentOutput::class);
         $createdpaymentoutput->method('getPayment')->willReturn($paymentresponse);
