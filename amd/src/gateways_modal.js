@@ -25,7 +25,7 @@
 import * as Repository from './repository';
 import Templates from 'core/templates';
 import Truncate from 'core/truncate';
-import ModalFactory from 'core/modal_factory';
+import Modal from 'core/modal';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
 
@@ -35,7 +35,7 @@ import {get_string as getString} from 'core/str';
  * @returns {Promise<Modal>}
  */
 const showModalWithPlaceholder = async() => {
-    const modal = await ModalFactory.create({
+    const modal = await Modal.create({
         body: await Templates.render('paygw_payone/payone_button_placeholder', {})
     });
     modal.show();
