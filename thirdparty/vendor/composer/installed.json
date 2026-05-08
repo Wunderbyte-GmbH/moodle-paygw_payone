@@ -2,28 +2,28 @@
     "packages": [
         {
             "name": "online-payments/sdk-php",
-            "version": "5.15.0",
-            "version_normalized": "5.15.0.0",
+            "version": "5.18.0",
+            "version_normalized": "5.18.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Online-Payments/sdk-php.git",
-                "reference": "6c22644dbe0947a708fc38c8df169d722fdfc0c4"
+                "reference": "b5d259a3eb0e1a4b15aac3105b324af0b10d5ee0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/6c22644dbe0947a708fc38c8df169d722fdfc0c4",
-                "reference": "6c22644dbe0947a708fc38c8df169d722fdfc0c4",
+                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/b5d259a3eb0e1a4b15aac3105b324af0b10d5ee0",
+                "reference": "b5d259a3eb0e1a4b15aac3105b324af0b10d5ee0",
                 "shasum": ""
             },
             "require": {
-                "php": "~7.4||~8.0||~8.1||~8.2",
+                "php": ">=7.4",
                 "robtimus/multipart": "^1.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.9",
                 "phpunit/phpunit": "^9.0"
             },
-            "time": "2024-04-16T14:48:19+00:00",
+            "time": "2025-02-06T15:12:24+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -49,7 +49,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Online-Payments/sdk-php/issues",
-                "source": "https://github.com/Online-Payments/sdk-php/tree/5.15.0"
+                "source": "https://github.com/Online-Payments/sdk-php/tree/5.18.0"
             },
             "install-path": "../online-payments/sdk-php"
         },
