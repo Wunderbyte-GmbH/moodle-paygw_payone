@@ -32,6 +32,7 @@ use OnlinePayments\Sdk\Domain\CardInfo;
 use OnlinePayments\Sdk\Domain\CreatedPaymentOutput;
 use OnlinePayments\Sdk\Domain\CreateHostedCheckoutResponse;
 use OnlinePayments\Sdk\Domain\GetHostedCheckoutResponse;
+use OnlinePayments\Sdk\Domain\MobilePaymentMethodSpecificOutput;
 use OnlinePayments\Sdk\Domain\PaymentOutput;
 use OnlinePayments\Sdk\Domain\PaymentResponse;
 use OnlinePayments\Sdk\Domain\PaymentStatusOutput;
@@ -292,5 +293,106 @@ final class transaction_complete_test extends \advanced_testcase {
             true,
             'We do it for another user, but declared (like in adhoc task or check status button'
         );
+    }
+
+    /**
+     * Test that mobile wallet product ids are written as payment brand.
+     *
+     * @covers \paygw_payone\external\transaction_complete::execute
+     * @throws \coding_exception
+     */
+    public function test_mobile_payment_brandcode_is_stored(): void {
+        global $DB;
+
+        // Create users.
+        $student1 = $this->getDataGenerator()->create_user();
+        $this->setUser($student1);
+
+        // Set local_shopping_cart to use the payment account.
+        set_config('accountid', $this->account->get('id'), 'local_shopping_cart');
+
+        shopping_cart::add_item_to_cart(
+            'local_shopping_cart',
+            'testitem',
+            1,
+            $student1->id
+        );
+        shopping_cart::add_item_to_cart(
+            'local_shopping_cart',
+            'testitem',
+            2,
+            $student1->id
+        );
+        shopping_cart::add_item_to_cart(
+            'local_shopping_cart',
+            'testitem',
+            3,
+            $student1->id
+        );
+
+        // With this code, we instantiate the checkout for this user.
+        $cartstore = cartstore::instance($student1->id);
+        $data = $cartstore->get_localized_data();
+        $cartstore->get_expanded_checkout_data($data);
+        get_config_for_js::execute('local_shopping_cart', 'main', $data['identifier']);
+
+        $amoutofmoney = $this->createMock(AmountOfMoney::class);
+        $amoutofmoney->method('getAmount')->willReturn(4410);
+        $amoutofmoney->method('getCurrencyCode')->willReturn('EUR');
+
+        $statusoutput = $this->createMock(PaymentStatusOutput::class);
+        $statusoutput->method('getStatusCode')->willReturn('800.100.100');
+
+        $mobilepaymentmethod = $this->createMock(MobilePaymentMethodSpecificOutput::class);
+        $mobilepaymentmethod->method('getPaymentProductId')->willReturn(302);
+
+        $paymentoutput = $this->createMock(PaymentOutput::class);
+        $paymentoutput->method('getAmountOfMoney')->willReturn($amoutofmoney);
+        $paymentoutput->method('getRedirectPaymentMethodSpecificOutput')->willReturn(null);
+        $paymentoutput->method('getCardPaymentMethodSpecificOutput')->willReturn(null);
+        $paymentoutput->method('getMobilePaymentMethodSpecificOutput')->willReturn($mobilepaymentmethod);
+
+        $paymentresponse = $this->createMock(PaymentResponse::class);
+        $paymentresponse->method('getPaymentOutput')->willReturn($paymentoutput);
+        $paymentresponse->method('getStatusOutput')->willReturn($statusoutput);
+        $paymentresponse->method('getStatus')->willReturn('CAPTURED');
+
+        $createdpaymentoutput = $this->createMock(CreatedPaymentOutput::class);
+        $createdpaymentoutput->method('getPayment')->willReturn($paymentresponse);
+        $createdpaymentoutput->method('getPaymentStatusCategory')->willReturn('SUCCESSFUL');
+
+        $orderdetails = $this->createMock(GetHostedCheckoutResponse::class);
+        $orderdetails->method('getStatus')->willReturn('PAYMENT_CREATED');
+        $orderdetails->method('getCreatedPaymentOutput')->willReturn($createdpaymentoutput);
+
+        $sdkmock = $this->getMockBuilder(payone_sdk::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['check_status'])
+            ->getMock();
+        $sdkmock->method('check_status')->willReturn($orderdetails);
+
+        payone_sdk::$factory = function () use ($sdkmock) {
+            return $sdkmock;
+        };
+
+        $tid = (int)$DB->get_field('paygw_payone_openorders', 'tid', ['userid' => $student1->id, 'itemid' => $data['identifier']]);
+
+        $result = transaction_complete::execute(
+            'local_shopping_cart',
+            '',
+            $data['identifier'],
+            $tid
+        );
+
+        $this->assertTrue($result['success']);
+
+        $paymentid = $DB->get_field('payments', 'id', [
+            'component' => 'local_shopping_cart',
+            'itemid' => $data['identifier'],
+        ]);
+        $payonerecord = $DB->get_record('paygw_payone', ['paymentid' => $paymentid], '*', MUST_EXIST);
+
+        $this->assertEquals('302', (string)$payonerecord->pboriginal);
+        $this->assertEquals('Apple Pay', $payonerecord->paymentbrand);
     }
 }
