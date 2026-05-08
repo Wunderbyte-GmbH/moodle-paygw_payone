@@ -296,6 +296,8 @@ class transaction_complete extends external_api implements interface_transaction
                             $brandcode = $redirectedmethod->getPaymentProductId();
                         } else if ($cardpaymentmethod = $paymentoutput->getCardPaymentMethodSpecificOutput()) {
                             $brandcode = $cardpaymentmethod->getPaymentProductId();
+                        } else if ($mobilepaymentmethod = $paymentoutput->getMobilePaymentMethodSpecificOutput()) {
+                            $brandcode = $mobilepaymentmethod->getPaymentProductId();
                         } else {
                             $brandcode = 'xxx'; // Will be replaced below.
                         }
