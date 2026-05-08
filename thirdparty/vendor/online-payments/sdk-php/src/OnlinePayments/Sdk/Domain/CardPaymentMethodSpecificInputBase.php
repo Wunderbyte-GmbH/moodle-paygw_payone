@@ -35,6 +35,11 @@ class CardPaymentMethodSpecificInputBase extends DataObject
     private $initialSchemeTransactionId;
 
     /**
+     * @var MultiplePaymentInformation
+     */
+    private $multiplePaymentInformation;
+
+    /**
      * @var PaymentProduct130SpecificInput
      */
     private $paymentProduct130SpecificInput;
@@ -153,6 +158,21 @@ class CardPaymentMethodSpecificInputBase extends DataObject
     public function setInitialSchemeTransactionId($value)
     {
         $this->initialSchemeTransactionId = $value;
+    }
+
+    /**
+     * @return MultiplePaymentInformation
+     */
+    public function getMultiplePaymentInformation()
+    {
+        return $this->multiplePaymentInformation;
+    }
+    /**
+     * @var MultiplePaymentInformation
+     */
+    public function setMultiplePaymentInformation($value)
+    {
+        $this->multiplePaymentInformation = $value;
     }
 
     /**
@@ -353,6 +373,9 @@ class CardPaymentMethodSpecificInputBase extends DataObject
         if ($this->initialSchemeTransactionId !== null) {
             $object->initialSchemeTransactionId = $this->initialSchemeTransactionId;
         }
+        if ($this->multiplePaymentInformation !== null) {
+            $object->multiplePaymentInformation = $this->multiplePaymentInformation->toObject();
+        }
         if ($this->paymentProduct130SpecificInput !== null) {
             $object->paymentProduct130SpecificInput = $this->paymentProduct130SpecificInput->toObject();
         }
@@ -415,6 +438,13 @@ class CardPaymentMethodSpecificInputBase extends DataObject
         }
         if (property_exists($object, 'initialSchemeTransactionId')) {
             $this->initialSchemeTransactionId = $object->initialSchemeTransactionId;
+        }
+        if (property_exists($object, 'multiplePaymentInformation')) {
+            if (!is_object($object->multiplePaymentInformation)) {
+                throw new UnexpectedValueException('value \'' . print_r($object->multiplePaymentInformation, true) . '\' is not an object');
+            }
+            $value = new MultiplePaymentInformation();
+            $this->multiplePaymentInformation = $value->fromObject($object->multiplePaymentInformation);
         }
         if (property_exists($object, 'paymentProduct130SpecificInput')) {
             if (!is_object($object->paymentProduct130SpecificInput)) {

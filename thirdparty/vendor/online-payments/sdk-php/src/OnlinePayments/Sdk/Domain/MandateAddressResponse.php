@@ -11,23 +11,13 @@ use UnexpectedValueException;
 /**
  * @package OnlinePayments\Sdk\Domain
  */
-class AddressPersonal extends DataObject
+class MandateAddressResponse extends DataObject
 {
     // Properties
     /**
      * @var string
      */
-    private $additionalInfo;
-
-    /**
-     * @var string
-     */
     private $city;
-
-    /**
-     * @var string
-     */
-    private $companyName;
 
     /**
      * @var string
@@ -38,16 +28,6 @@ class AddressPersonal extends DataObject
      * @var string
      */
     private $houseNumber;
-
-    /**
-     * @var PersonalName
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $state;
 
     /**
      * @var string
@@ -63,21 +43,6 @@ class AddressPersonal extends DataObject
     /**
      * @return string
      */
-    public function getAdditionalInfo()
-    {
-        return $this->additionalInfo;
-    }
-    /**
-     * @var string
-     */
-    public function setAdditionalInfo($value)
-    {
-        $this->additionalInfo = $value;
-    }
-
-    /**
-     * @return string
-     */
     public function getCity()
     {
         return $this->city;
@@ -88,21 +53,6 @@ class AddressPersonal extends DataObject
     public function setCity($value)
     {
         $this->city = $value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompanyName()
-    {
-        return $this->companyName;
-    }
-    /**
-     * @var string
-     */
-    public function setCompanyName($value)
-    {
-        $this->companyName = $value;
     }
 
     /**
@@ -133,36 +83,6 @@ class AddressPersonal extends DataObject
     public function setHouseNumber($value)
     {
         $this->houseNumber = $value;
-    }
-
-    /**
-     * @return PersonalName
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * @var PersonalName
-     */
-    public function setName($value)
-    {
-        $this->name = $value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-    /**
-     * @var string
-     */
-    public function setState($value)
-    {
-        $this->state = $value;
     }
 
     /**
@@ -201,26 +121,14 @@ class AddressPersonal extends DataObject
     public function toObject()
     {
         $object = parent::toObject();
-        if ($this->additionalInfo !== null) {
-            $object->additionalInfo = $this->additionalInfo;
-        }
         if ($this->city !== null) {
             $object->city = $this->city;
-        }
-        if ($this->companyName !== null) {
-            $object->companyName = $this->companyName;
         }
         if ($this->countryCode !== null) {
             $object->countryCode = $this->countryCode;
         }
         if ($this->houseNumber !== null) {
             $object->houseNumber = $this->houseNumber;
-        }
-        if ($this->name !== null) {
-            $object->name = $this->name->toObject();
-        }
-        if ($this->state !== null) {
-            $object->state = $this->state;
         }
         if ($this->street !== null) {
             $object->street = $this->street;
@@ -239,30 +147,14 @@ class AddressPersonal extends DataObject
     public function fromObject($object)
     {
         parent::fromObject($object);
-        if (property_exists($object, 'additionalInfo')) {
-            $this->additionalInfo = $object->additionalInfo;
-        }
         if (property_exists($object, 'city')) {
             $this->city = $object->city;
-        }
-        if (property_exists($object, 'companyName')) {
-            $this->companyName = $object->companyName;
         }
         if (property_exists($object, 'countryCode')) {
             $this->countryCode = $object->countryCode;
         }
         if (property_exists($object, 'houseNumber')) {
             $this->houseNumber = $object->houseNumber;
-        }
-        if (property_exists($object, 'name')) {
-            if (!is_object($object->name)) {
-                throw new UnexpectedValueException('value \'' . print_r($object->name, true) . '\' is not an object');
-            }
-            $value = new PersonalName();
-            $this->name = $value->fromObject($object->name);
-        }
-        if (property_exists($object, 'state')) {
-            $this->state = $object->state;
         }
         if (property_exists($object, 'street')) {
             $this->street = $object->street;

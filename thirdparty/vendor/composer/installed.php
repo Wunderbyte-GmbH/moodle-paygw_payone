@@ -3,7 +3,7 @@
         'name' => 'user/thirdparty',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'be65a500942f6ce99673a8df0625f75d6553bf82',
+        'reference' => '94398f2b707d194541e1b44c11beea44ba5f1151',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'online-payments/sdk-php' => array(
-            'pretty_version' => '5.15.0',
-            'version' => '5.15.0.0',
-            'reference' => '6c22644dbe0947a708fc38c8df169d722fdfc0c4',
+            'pretty_version' => '5.18.0',
+            'version' => '5.18.0.0',
+            'reference' => 'b5d259a3eb0e1a4b15aac3105b324af0b10d5ee0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../online-payments/sdk-php',
             'aliases' => array(),
@@ -31,7 +31,7 @@
         'user/thirdparty' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'be65a500942f6ce99673a8df0625f75d6553bf82',
+            'reference' => '94398f2b707d194541e1b44c11beea44ba5f1151',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
