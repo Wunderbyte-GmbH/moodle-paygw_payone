@@ -2,51 +2,69 @@ name: Moodle Plugin CI
 
 on: [push, pull_request]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  ci:
+  moodle405to501:
     uses: Wunderbyte-GmbH/catalyst-moodle-workflows/.github/workflows/ci.yml@main
     with:
-      # Change these based on your plugin's requirements
+      # min_php: '7.4'
+      moodle_branches: "MOODLE_405_STABLE MOODLE_500_STABLE MOODLE_501_STABLE"  # Optional: Only test specific Moodle versions
 
-      disable_release: true  # Use true if using the tag-based release workflow
-
-      # moodle_branches: "MOODLE_401_STABLE MOODLE_402_STABLE"  # Optional: Only test specific Moodle versions
-      min_php: "7.4"  # Optional: Set minimum PHP version
-
-      # Command to install more dependencies
+      # If you need to install additional plugins as dependencies
       extra_plugin_runners: |
         moodle-plugin-ci add-plugin --branch MOODLE_405_DEV Wunderbyte-GmbH/moodle-local_shopping_cart
 
       # If you need to ignore specific paths (third-party libraries are ignored by default)
       ignore_paths: 'thirdparty/vendor'
+      # mustache_ignore_names: 'history_items.mustache,cashier.mustache,shopping_cart_item.mustache,history_item.mustache,form-user-selector-suggestion.mustache,shopping_cart_popover.mustache'
 
-      # Specify paths to ignore for mustache lint
-      # mustache_ignore_names: 'cashier.mustache,shopping_cart_item.mustache,history_item.mustache,form-user-selector-suggestion.mustache,shopping_cart_popover.mustache'
+      workarounds: |
+        # WORKAROUND 17/04/2025: The following code is a workaround for the "File is stale and needs to be rebuilt" error
+        # This occurs when AMD modules import Moodle core dependencies
+        # See issue: https://github.com/moodlehq/moodle-plugin-ci/issues/350
+        # This workaround should be removed once the issue is fixed upstream
 
-      # Specify paths to ignore for code checker
-      # codechecker_ignore_paths: 'OpenTBS, TinyButStrong'
+        # Load NVM and use the version from .nvmrc
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-      # Specify paths to ignore for PHPDoc checker
-      # phpdocchecker_ignore_paths: 'OpenTBS, TinyButStrong'
+        # Go to moodle directory
+        cd moodle
+
+        # Use NVM to set Node version and ensure grunt-cli is installed
+        nvm use
+        npm install
+        npm install -g grunt-cli
+
+        # Go back to plugin directory
+        cd ../plugin
+
+        # Pre-build AMD files to avoid stale file warnings
+        echo "=== Building AMD files before CI check ==="
+        grunt --gruntfile ../moodle/Gruntfile.js amd
+        echo "AMD files built successfully"
+
+        # Go Back to main directory
+        cd ..
+
+        # END OF WORKAROUND
 
       # If you need to disable specific tests
-      # disable_phpcpd: true
-      # disable_mustache: true
-      # disable_phpunit: true
-      # disable_grunt: true
-      # disable_phpdoc: true
-      # disable_phpcs: true
-      # disable_phplint: true
-      # disable_ci_validate: true
-
-      # If you need to enable PHPMD
-      enable_phpmd: true
+      disable_release: true
+      # disable_mustache: false
+      # disable_phpunit: false
+      # disable_grunt: false
+      # disable_phpdoc: false
+      # disable_phpcs: false
+      # disable_phpcpd: false
+      # disable_phplint: false
+      # disable_ci_validate: false
 
       # For strict code quality checks
       codechecker_max_warnings: 0
 
-    secrets:
-      # Required secrets for your PAYONE tests
-      brandname: ${{ secrets.BRANDNAME }}
-      clientid: ${{ secrets.CLIENTID }}
-      payone_secret: ${{ secrets.PAYONE_SECRET }}
+      # If you need to enable PHPMD
+      enable_phpmd: true
