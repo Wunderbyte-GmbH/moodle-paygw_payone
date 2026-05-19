@@ -18,14 +18,14 @@
  * Version information
  *
  * @package    paygw_payone
- * @copyright  2024 Wunderbyte Gmbh <info@wunderbyte.at>
+ * @copyright  2026 Wunderbyte Gmbh <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release = 'v0.2.15';
-$plugin->version   = 2025032700;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2021051100;        // Requires this Moodle version.
+$plugin->release = 'v0.2.16';
+$plugin->version   = 2026051900;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2024100700;        // Requires this Moodle version. Current: Moodle 4.5.
 $plugin->component = 'paygw_payone';    // Full name of the plugin (used for diagnostics).
-$plugin->supported = [401, 405];
+$plugin->supported = [405, 501];
