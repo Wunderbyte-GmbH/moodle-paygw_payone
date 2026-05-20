@@ -68,3 +68,9 @@ jobs:
 
       # If you need to enable PHPMD
       enable_phpmd: true
+
+    secrets:
+      # Required secrets for your PAYONE tests
+      BRANDNAME: ${{ secrets.BRANDNAME }}
+      CLIENTID: ${{ secrets.CLIENTID }}
+      PAYONE_SECRET: ${{ secrets.PAYONE_SECRET }}
