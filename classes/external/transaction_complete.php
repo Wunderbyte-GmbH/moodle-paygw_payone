@@ -208,7 +208,35 @@ class transaction_complete extends external_api implements interface_transaction
         // Now we check of the amount from the open orders table is the same that the user actually paid.
 
         $sdk = payone_sdk::create($config->clientid, $config->secret, $config->brandname, $sandbox);
-        $orderdetails = $sdk->check_status($tid);
+        try {
+            $orderdetails = $sdk->check_status($tid);
+        } catch (\OnlinePayments\Sdk\ResponseException $e) {
+            // In DEBUG_DEVELOPER mode, let the exception propagate for easier debugging.
+            if ($CFG->debug > 0) {
+                throw $e;
+            }
+            // The hostedCheckoutId is unknown to the provider (e.g. expired or migrated during PAYID format change).
+            $context = context_system::instance();
+            $event = payment_error::create([
+                'context' => $context,
+                'userid' => $userid,
+                'other' => [
+                    'message' => $e->getMessage(),
+                    'orderid' => $tid,
+                    'itemid' => $itemid,
+                    'component' => $component,
+                    'paymentarea' => $paymentarea,
+                ],
+            ]);
+            $event->trigger();
+            $url = str_replace('success=1', 'success=0', $successurl);
+            return [
+                'url' => $url ?? $serverurl,
+                'success' => false,
+                'message' => get_string('cannotfetchorderdetails', 'paygw_payone') . ' ' . $e->getMessage(),
+            ];
+        }
+
         $statusorder = $orderdetails->getStatus();
         if ($orderdetails && $statusorder == 'PAYMENT_CREATED') {
             $status = '';
