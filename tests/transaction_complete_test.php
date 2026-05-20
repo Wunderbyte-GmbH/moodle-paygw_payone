@@ -92,7 +92,7 @@ final class transaction_complete_test extends \advanced_testcase {
         $responsedata = $this->createMock(CreateHostedCheckoutResponse::class);
         $responsedata->method('getHostedCheckoutId')
             ->willReturnCallback(function () {
-                return str_pad(rand(1000000000, 9999999999), 10, '0', STR_PAD_LEFT);
+                return str_pad(rand(10000000000, 99999999999), 11, '0', STR_PAD_LEFT);
             });
         $responsedata->method('getRedirectUrl')->willReturn('https://payment.preprod.payone.com/hostedcheckout/PaymentMethods/');
 
@@ -376,6 +376,7 @@ final class transaction_complete_test extends \advanced_testcase {
         };
 
         $tid = (int)$DB->get_field('paygw_payone_openorders', 'tid', ['userid' => $student1->id, 'itemid' => $data['identifier']]);
+        $this->assertIsInt($tid, 'The value of $tid should be an integer.');
 
         $result = transaction_complete::execute(
             'local_shopping_cart',
