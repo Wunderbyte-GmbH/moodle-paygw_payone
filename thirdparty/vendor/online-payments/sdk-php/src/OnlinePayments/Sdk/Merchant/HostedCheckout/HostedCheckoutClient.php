@@ -15,7 +15,7 @@ class HostedCheckoutClient extends ApiResource implements HostedCheckoutClientIn
     /**
      * {@inheritDoc}
      */
-    public function createHostedCheckout(CreateHostedCheckoutRequest $body, CallContext $callContext = null)
+    public function createHostedCheckout(CreateHostedCheckoutRequest $body, ?CallContext $callContext = null)
     {
         $responseClassMap = new ResponseClassMap('\OnlinePayments\Sdk\Domain\CreateHostedCheckoutResponse');
         return $this->getCommunicator()->post(
@@ -31,7 +31,7 @@ class HostedCheckoutClient extends ApiResource implements HostedCheckoutClientIn
     /**
      * {@inheritDoc}
      */
-    public function getHostedCheckout($hostedCheckoutId, CallContext $callContext = null)
+    public function getHostedCheckout($hostedCheckoutId, ?CallContext $callContext = null)
     {
         $this->context['hostedCheckoutId'] = $hostedCheckoutId;
         $responseClassMap = new ResponseClassMap('\OnlinePayments\Sdk\Domain\GetHostedCheckoutResponse');

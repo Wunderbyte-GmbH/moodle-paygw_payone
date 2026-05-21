@@ -22,10 +22,10 @@ class ApiResource
     /**
      * Creates a new proxy object for a RAML resource.
      *
-     * @param ApiResource $parent The parent resource.
+     * @param ApiResource|null $parent The parent resource.
      * @param array $context An associative array that maps URI parameters to values.
      */
-    public function __construct(ApiResource $parent = null, $context = array())
+    public function __construct(?ApiResource $parent = null, $context = array())
     {
         $this->parent = $parent;
         $this->context = $context;
