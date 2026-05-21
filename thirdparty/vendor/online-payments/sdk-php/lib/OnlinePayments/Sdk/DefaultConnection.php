@@ -48,7 +48,7 @@ class DefaultConnection implements Connection
      * @throws Exception
      */
     public function get($requestUri, $requestHeaders, callable $responseHandler,
-                        ProxyConfiguration $proxyConfiguration = null)
+                        ?ProxyConfiguration $proxyConfiguration = null)
     {
         $requestId = UuidGenerator::generatedUuid();
         $this->logRequest($requestId, 'GET', $requestUri, $requestHeaders, '');
@@ -72,7 +72,7 @@ class DefaultConnection implements Connection
      * @throws Exception
      */
     public function delete($requestUri, $requestHeaders, callable $responseHandler,
-                           ProxyConfiguration $proxyConfiguration = null)
+                           ?ProxyConfiguration $proxyConfiguration = null)
     {
         $requestId = UuidGenerator::generatedUuid();
         $this->logRequest($requestId, 'DELETE', $requestUri, $requestHeaders, '');
@@ -97,7 +97,7 @@ class DefaultConnection implements Connection
      * @throws Exception
      */
     public function post($requestUri, $requestHeaders, $body, callable $responseHandler,
-                         ProxyConfiguration $proxyConfiguration = null)
+                         ?ProxyConfiguration $proxyConfiguration = null)
     {
         $requestId = UuidGenerator::generatedUuid();
         $this->logRequest($requestId, 'POST', $requestUri, $requestHeaders, $body);
@@ -122,7 +122,7 @@ class DefaultConnection implements Connection
      * @throws Exception
      */
     public function put($requestUri, $requestHeaders, $body, callable $responseHandler,
-                        ProxyConfiguration $proxyConfiguration = null)
+                        ?ProxyConfiguration $proxyConfiguration = null)
     {
         $requestId = UuidGenerator::generatedUuid();
         $this->logRequest($requestId, 'PUT', $requestUri, $requestHeaders, $body);
@@ -168,7 +168,7 @@ class DefaultConnection implements Connection
         $requestHeaders,
         $body,
         callable $responseHandler,
-        ProxyConfiguration $proxyConfiguration = null
+        ?ProxyConfiguration $proxyConfiguration = null
     )
     {
         if (!in_array($httpMethod, array('GET', 'DELETE', 'POST', 'PUT'))) {
@@ -286,7 +286,7 @@ class DefaultConnection implements Connection
         $requestUri,
         $requestHeaders,
         $body,
-        ProxyConfiguration $proxyConfiguration = null
+        ?ProxyConfiguration $proxyConfiguration = null
     )
     {
         if (!is_array($requestHeaders)) {

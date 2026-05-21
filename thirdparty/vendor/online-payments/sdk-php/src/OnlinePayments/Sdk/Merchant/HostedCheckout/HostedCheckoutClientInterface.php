@@ -24,7 +24,7 @@ interface HostedCheckoutClientInterface
      * ApiResource /v2/{merchantId}/hostedcheckouts - Create hosted checkout
      *
      * @param CreateHostedCheckoutRequest $body
-     * @param CallContext $callContext
+     * @param CallContext $callContext|null
      * @return CreateHostedCheckoutResponse
      *
      * @throws ApiException
@@ -36,13 +36,13 @@ interface HostedCheckoutClientInterface
      * @throws ReferenceException
      * @throws ValidationException
      */
-    public function createHostedCheckout(CreateHostedCheckoutRequest $body, CallContext $callContext = null);
+    public function createHostedCheckout(CreateHostedCheckoutRequest $body, ?CallContext $callContext = null);
 
     /**
      * ApiResource /v2/{merchantId}/hostedcheckouts/{hostedCheckoutId} - Get hosted checkout status
      *
      * @param string $hostedCheckoutId
-     * @param CallContext $callContext
+     * @param CallContext|null $callContext
      * @return GetHostedCheckoutResponse
      *
      * @throws ApiException
@@ -54,5 +54,5 @@ interface HostedCheckoutClientInterface
      * @throws ReferenceException
      * @throws ValidationException
      */
-    public function getHostedCheckout($hostedCheckoutId, CallContext $callContext = null);
+    public function getHostedCheckout($hostedCheckoutId, ?CallContext $callContext = null);
 }

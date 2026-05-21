@@ -49,7 +49,7 @@ class CommunicatorConfiguration
      * @param string $integrator
      * @param ProxyConfiguration|null $proxyConfiguration
      */
-    public function __construct($apiKeyId, $apiSecret, $apiEndpoint, $integrator, ProxyConfiguration $proxyConfiguration = null)
+    public function __construct($apiKeyId, $apiSecret, $apiEndpoint, $integrator, ?ProxyConfiguration $proxyConfiguration = null)
     {
         $apiEndpoint = rtrim($apiEndpoint, '/');
         $this->validateApiEndpoint($apiEndpoint);
@@ -132,7 +132,7 @@ class CommunicatorConfiguration
     /**
      * @param ProxyConfiguration|null $proxyConfiguration
      */
-    public function setProxyConfiguration(ProxyConfiguration $proxyConfiguration = null)
+    public function setProxyConfiguration(?ProxyConfiguration $proxyConfiguration = null)
     {
         $this->proxyConfiguration = $proxyConfiguration;
     }
@@ -164,7 +164,7 @@ class CommunicatorConfiguration
     /**
      * @param ShoppingCartExtension|null $shoppingCartExtension
      */
-    public function setShoppingCartExtension(ShoppingCartExtension $shoppingCartExtension = null)
+    public function setShoppingCartExtension(?ShoppingCartExtension $shoppingCartExtension = null)
     {
         $this->shoppingCartExtension = $shoppingCartExtension;
     }
