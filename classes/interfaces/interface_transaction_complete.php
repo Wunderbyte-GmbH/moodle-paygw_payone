@@ -25,7 +25,7 @@
 
 namespace paygw_payone\interfaces;
 
-use external_function_parameters;
+use core_external\external_function_parameters;
 
 defined('MOODLE_INTERNAL') || die();
 
