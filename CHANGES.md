@@ -1,5 +1,4 @@
+## Version 0.2.18 (2026111000)
 * Improvement: Added support for Moodle 5.2 and 5.3: the supported range in version.php is now 4.5 to 5.3, and the automated tests (PHPUnit, Behat, code checks) also run against Moodle 5.2 and 5.3.
 * Bugfix: Moodle 5.3: the web services use the core_external\* classes instead of the deprecated global external_* classes (MDL-81225). Before, every call of a PAYONE web service raised the debugging notice "Class 'external_api' has been renamed for the autoloader and is now deprecated" for developers, which also made PHPUnit and Behat tests fail on that version.
-
-## Version v0.2.18 (2026091800)
 * Bugfix: The provider exception is only re-thrown in developer mode. Before, every site with a debug level above NONE turned a hosted checkout the provider does not know any more into an uncaught exception. (Wunderbyte-GmbH/Wunderbyte-GmbH#2429)
